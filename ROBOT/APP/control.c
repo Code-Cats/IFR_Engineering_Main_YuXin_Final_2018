@@ -11,7 +11,7 @@ extern LIFT_POSITION_ENCODER lift_position_encoder[4];
 extern GYRO_DATA Gyro_Data;
 
 extern CHASSIS_DATA chassis_Data;
-extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];
+//extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];	·ÖÇøÈüºóÆúÓÃ
 extern ViceControlDataTypeDef ViceControlData;
 extern SensorDataTypeDef SensorData;
 
@@ -385,7 +385,7 @@ void Work_Execute_LastVersion(void)	//Ö®Ç°°æ±¾µÄÖ´ĞĞ
 		}
 		case CALI_STATE:	//±ê¶¨Ä£Ê½
 		{
-			if(Lift_Cali()==1&&BulletLift_Cali()==1)
+			if(Lift_Cali()==1)	//&&BulletLift_Cali()==1
 			{
 				SetWorkState(NORMAL_STATE);
 			}
@@ -476,7 +476,7 @@ extern u8 Replenish_Bullet_Statu;	//²¹µ¯×´Ì¬Î»
 extern u8 Trailer_statu;
 
 u8 t_trailer_sensor_data_simu=0;	//´«¸ĞÆ÷Êı¾İ·ÂÕæ
-extern u8 SetCheck_TakeBullet_TakeBack_statu;	//ÇĞ³öÈ¡µ¯±£»¤Ö´ĞĞ±êÖ¾Î»	//¼ÓÔÚÕâÀïÊÇÈÃ°ë×Ô¶¯ÏÂµºÄÜÓĞÏÂ½µµÄÇ°ÌáÌõ¼ş	//Õâ¸östatuÎª0¶¼ÊÇÔÚÒ»´ÎÖ´ĞĞÍê³Éºó²ÅÓĞ
+//extern u8 SetCheck_TakeBullet_TakeBack_statu;	//ÇĞ³öÈ¡µ¯±£»¤Ö´ĞĞ±êÖ¾Î»	//¼ÓÔÚÕâÀïÊÇÈÃ°ë×Ô¶¯ÏÂµºÄÜÓĞÏÂ½µµÄÇ°ÌáÌõ¼ş	//Õâ¸östatuÎª0¶¼ÊÇÔÚÒ»´ÎÖ´ĞĞÍê³Éºó²ÅÓĞ
 void Work_Execute_Gaming(void)	//Õ½³¡°æswitch¹¤×÷Ö´ĞĞ
 {
 	static WorkState_e State_Record=CHECK_STATE;
@@ -583,7 +583,7 @@ void Work_Execute_Gaming(void)	//Õ½³¡°æswitch¹¤×÷Ö´ĞĞ
 			Teleconltroller_Data_protect();	//Ò£¿ØÆ÷Êı¾İ±£»¤
 			
 			TakeBullet_Control_Center();	//¼ÓÉÏÕâ¸öÊÇÒòÎª¹ØÓÚ¶æ»ú¡¢Æø¸×µÄ¼ÙÏë·´À¡¼ÆËãÔÚÕâÀïÃæ£¬ÇĞ³öÈ¡µ¯¹éÎ»±£»¤ĞèÒªËü£¬ÆäÄÚ²¿ÒÑ¾­×öÁË½öÔÚTAKEBULLETÏÂ×öÂß¼­´¦Àí
-			if(SetCheck_TakeBullet_TakeBack_statu==0)	//Ö»ÓĞµ±È¡µ¯×´Ì¬ÍêÈ«ÍË³öÊ±£¬statu²Å»á±»ÖÃ0
+///////			if(SetCheck_TakeBullet_TakeBack_statu==0)	//Ö»ÓĞµ±È¡µ¯×´Ì¬ÍêÈ«ÍË³öÊ±£¬statu²Å»á±»ÖÃ0
 			{
 				semi_auto_outlanding_center();
 			}
@@ -646,7 +646,7 @@ void Work_State_Change_BackProtect(void)	//µ±´ÓÄ³Ò»×´Ì¬ÍË³öÊ±£¬È·±£¸Ã×´Ì¬µÄÒ»ÇĞÒ
 	
 	if(State_Record==TAKEBULLET_STATE&&GetWorkState()!=TAKEBULLET_STATE)	//ÍË³öÈ¡µ¯Ä£Ê½
 	{
-		SetCheck_TakeBullet_TakeBack_statu=1;	//Ë¢ĞÂ´¦
+//////		SetCheck_TakeBullet_TakeBack_statu=1;	//Ë¢ĞÂ´¦
 	}
 	
 	if(State_Record!=TAKEBULLET_STATE&&GetWorkState()==TAKEBULLET_STATE)
@@ -654,10 +654,10 @@ void Work_State_Change_BackProtect(void)	//µ±´ÓÄ³Ò»×´Ì¬ÍË³öÊ±£¬È·±£¸Ã×´Ì¬µÄÒ»ÇĞÒ
 		Replenish_Bullet_Statu=0;	//±£»¤ĞÔ´ëÊ©	//Õı³£²Ù×÷Ò»¶¨Îª0
 		Trailer_statu=0;	//±£»¤ĞÔ´ëÊ©//Õı³£²Ù×÷Ò»¶¨Îª0
 		
-		SetCheck_GripBulletLift(1);
+//		SetCheck_GripBulletLift(1);
 		ViceControlData.valve[VALVE_ISLAND]=0;	//È¡µ¯ÊÕ»Øµ¼ÂÖ
 	}
-	SetCheck_TakeBullet_TakeBack();	//Ö´ĞĞ´¦
+//	SetCheck_TakeBullet_TakeBack();	//Ö´ĞĞ´¦
 	State_Record=GetWorkState();
 }
 
@@ -715,13 +715,9 @@ void LED_Indicate(void)
 			}
 			case ERROR_STATE:	//´íÎóÄ£Ê½
 			{
-				if(t_error_i_record==LOST_BULLETLIFT1)	//Ç°È¡µ¯Éı½µ
+				if(t_error_i_record==LOST_BULLETROTATE1)	//È¡µ¯Ğı×ª
 				{
 					LED_Blink_Set(3,10);
-				}
-				else if(t_error_i_record==LOST_BULLETLIFT2)	//ºóÈ¡µ¯Éı½µ
-				{
-					LED_Blink_Set(4,10);
 				}
 				else if(t_error_i_record==LOST_CM1||t_error_i_record==LOST_CM2||t_error_i_record==LOST_CM3||t_error_i_record==LOST_CM4)	//µ×ÅÌµç»ú
 				{
@@ -769,7 +765,6 @@ LED_Blink_Run();
 /////////////////////////////////Ô­À´·Ålift taskµÄµØ·½
 
 float lift_calisend[4]={0};
-float bulletlift_calisend[2]={0};
 
 void Motor_Send(void)
 {
@@ -779,14 +774,14 @@ void Motor_Send(void)
 		{	//°åÔØÍâÉè³õÊ¼»¯ºó±ã½øÈë×Ô¼ìÄ£Ê½ //´ËÊ±ÍâÉè¸Õ¸Õ¿ªÆô£¬ĞèµÈ´ıÒ»¶ÎÊ±¼äÈ«¾Ö×Ô¼ìÎ´¼ì²âµ½Òì³££¨2-3¸ö×Ô¼ì´¥·¢ÖÜÆÚÒÔÉÏ£©£¬ÓÖÒòÎªÊ±¼ä¼ÆËãÆğµãÎª¶¨Ê±Æ÷Æô¶¯µã£¬¹ÊÎŞĞè½øĞĞÊ±¼ä²î¼ÇÂ¼
 			CAN2_Chassis_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg(0,0,0,0);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case PREPARE_STATE:	//Ô¤±¸Ä£Ê½
 		{	//µÈ´ı³µÉí×´Ì¬ÎÈ¶¨£¬²¢ÉèÖÃ³õÖµ
 			CAN2_Chassis_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg(0,0,0,0);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case CALI_STATE:	//±ê¶¨Ä£Ê½
@@ -797,16 +792,12 @@ void Motor_Send(void)
 			Lift_Cali_Output_Limit(lift_Data.rb_lift_output,&lift_calisend[RB]);
 //		Entirety_PID(&lift_Data,cali_send);  	//ÕûÌåPID²¹³¥
 //			Lift_Cali_GYRO_Compensate(cali_send);	//ÍÓÂİÒÇ²¹³¥.´æÔÚÎÊÌâ3.14
-			
-			BulletLift_Cali_Output_Limit(bulletlift_Motor_Data[BULLETLIFT_FRONTID].output,&bulletlift_calisend[BULLETLIFT_FRONTID]);
-			BulletLift_Cali_Output_Limit(bulletlift_Motor_Data[BULLETLIFT_BACKID].output,&bulletlift_calisend[BULLETLIFT_BACKID]);
-			
 
 			CAN2_Chassis_SendMsg(0,0,0,0);
 //		CAN1_Lift_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg((s16)lift_calisend[LF],(s16)lift_calisend[RF],(s16)lift_calisend[LB],(s16)lift_calisend[RB]);
-//			CAN2_BulletLift_SendMsg(0,0);
-			CAN2_BulletLift_SendMsg(bulletlift_calisend[BULLETLIFT_FRONTID],bulletlift_calisend[BULLETLIFT_BACKID]);
+
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case NORMAL_STATE:	//Õı³£²Ù×÷Ä£Ê½
@@ -816,28 +807,28 @@ void Motor_Send(void)
 //			CAN_Chassis_SendMsg(0,0,0,0);
 //    CAN_Lift_SendMsg((s16)lift_tem,(s16)lift_tem,(s16)lift_tem,(s16)lift_tem);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
-			CAN2_BulletLift_SendMsg((s16)bulletlift_Motor_Data[BULLETLIFT_FRONTID].output,(s16)bulletlift_Motor_Data[BULLETLIFT_BACKID].output);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case ERROR_STATE:	//´íÎóÄ£Ê½
 		{
 			CAN2_Chassis_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg(0,0,0,0);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case STOP_STATE:	//Í£Ö¹×´Ì¬
 		{
 			CAN2_Chassis_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg(0,0,0,0);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case PROTECT_STATE:	//×ÔÎÒ±£»¤Ä£Ê½
 		{
 			CAN2_Chassis_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg(0,0,0,0);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case ASCEND_STATE:	//×Ô¶¯ÉÏµºÄ£Ê½
@@ -845,33 +836,33 @@ void Motor_Send(void)
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 //			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case DESCEND_STATE:	//×Ô¶¯ÏÂµºÄ£Ê½
 		{
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 		case TAKEBULLET_STATE:
 		{
-			CAN2_BulletLift_SendMsg((s16)bulletlift_Motor_Data[BULLETLIFT_FRONTID].output,(s16)bulletlift_Motor_Data[BULLETLIFT_BACKID].output);
+			CAN2_BulletRotate_SendMsg(0,0);
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			break;
 		}
 		case SEMI_ASCEND_STATE:
 		{
-			CAN2_BulletLift_SendMsg((s16)bulletlift_Motor_Data[BULLETLIFT_FRONTID].output,(s16)bulletlift_Motor_Data[BULLETLIFT_BACKID].output);
+			CAN2_BulletRotate_SendMsg(0,0);
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			break;
 		}
 		case SEMI_DESCEND_STATE:
 		{
-			CAN2_BulletLift_SendMsg((s16)bulletlift_Motor_Data[BULLETLIFT_FRONTID].output,(s16)bulletlift_Motor_Data[BULLETLIFT_BACKID].output);
+			CAN2_BulletRotate_SendMsg(0,0);
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			break;
@@ -880,7 +871,7 @@ void Motor_Send(void)
 		{
 			CAN2_Chassis_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg(0,0,0,0);
-			CAN2_BulletLift_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg(0,0);
 			break;
 		}
 	}

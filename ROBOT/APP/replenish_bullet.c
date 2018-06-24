@@ -25,10 +25,10 @@ void Replenish_Bullet_Task(u8 key_r_state)
 	if(Replenish_Bullet_Statu==1)
 	{
 		ViceControlData.valve[VALVE_ISLAND]=0;	//补弹时将气缸收回
-		if(SetCheck_GripBulletLift(0)==1)
-		{
-			ViceControlData.valve[VALVE_BULLET_STORAGE]=1;	//将补弹气缸伸出
-		}
+//////////		if(SetCheck_GripBulletLift(0)==1)
+//////////		{
+//////////			ViceControlData.valve[VALVE_BULLET_STORAGE]=1;	//将补弹气缸伸出
+//////////		}
 //		if(RC_Ctl.rc.ch3-1024>80)
 		if(KeyBoardData[KEY_CTRL].value==1)
 		{
@@ -37,10 +37,10 @@ void Replenish_Bullet_Task(u8 key_r_state)
 	}
 	else
 	{
-		if(valve_fdbstate[VALVE_BULLET_STORAGE]==0)	//如果已经收回来了
-		{
-			SetCheck_GripBulletLift(1);
-		}
+////////		if(valve_fdbstate[VALVE_BULLET_STORAGE]==0)	//如果已经收回来了
+////////		{
+//////////			SetCheck_GripBulletLift(1);
+////////		}
 		
 		ViceControlData.servo[SERVO_BULLET_DOWN]=0;		//舵机执行处反馈处在自动取弹文件，因时间关系未整理分离
 		ViceControlData.valve[VALVE_BULLET_STORAGE]=0;	//将补弹气缸收回

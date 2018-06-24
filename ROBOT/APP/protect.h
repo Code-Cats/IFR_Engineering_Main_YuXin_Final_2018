@@ -16,8 +16,7 @@ enum LOST_TYPES
 	LOST_LIFT2,
 	LOST_LIFT3,
 	LOST_LIFT4,
-	LOST_BULLETLIFT1,//取弹前进方向前为1
-	LOST_BULLETLIFT2,
+	LOST_BULLETROTATE1,//原取弹升降电机变为取弹旋转电机
 	LOST_TYPE_NUM,
 };
 
@@ -37,7 +36,6 @@ extern Error_check_t Error_Check;
 	17,\
 	4,\
 	10,\
-	2,\
 	2,\
 	2,\
 	2,\

@@ -19,14 +19,14 @@ void CAN1_Feedback_Analysis(CanRxMsg *rx_message)
 			case 0x201:
 			 {
 				 Speed_Data_deal(&lift_Data.rb_lift_fdbV,rx_message);
-				 Position_Data_deal(&lift_Data.rb_lift_fdbP,&lift_position_encoder[RB],rx_message);	//已将原LF,RB调换
+				 Position_Data_deal_DIV8(&lift_Data.rb_lift_fdbP,&lift_position_encoder[RB],rx_message);	//已将原LF,RB调换
 				 LostCountFeed(&Error_Check.count[LOST_LIFT1]);
 				 break;
 			 }
 			 case 0x202:
 			 {
 				 Speed_Data_deal(&lift_Data.lb_lift_fdbV,rx_message);
-				 Position_Data_deal(&lift_Data.lb_lift_fdbP,&lift_position_encoder[LB],rx_message);	//已将原LB,RF调换
+				 Position_Data_deal_DIV8(&lift_Data.lb_lift_fdbP,&lift_position_encoder[LB],rx_message);	//已将原LB,RF调换
 				 LostCountFeed(&Error_Check.count[LOST_LIFT2]);
 				 break;
 			 }
@@ -34,7 +34,7 @@ void CAN1_Feedback_Analysis(CanRxMsg *rx_message)
 			 {
 				 
 				 Speed_Data_deal(&lift_Data.rf_lift_fdbV,rx_message);
-				 Position_Data_deal(&lift_Data.rf_lift_fdbP,&lift_position_encoder[RF],rx_message);	//已将原LB,RF调换
+				 Position_Data_deal_DIV8(&lift_Data.rf_lift_fdbP,&lift_position_encoder[RF],rx_message);	//已将原LB,RF调换
 				 LostCountFeed(&Error_Check.count[LOST_LIFT3]);
 				 break;
 			 }
@@ -42,7 +42,7 @@ void CAN1_Feedback_Analysis(CanRxMsg *rx_message)
 			 {
 				 
 				 Speed_Data_deal(&lift_Data.lf_lift_fdbV,rx_message);
-				 Position_Data_deal(&lift_Data.lf_lift_fdbP,&lift_position_encoder[LF],rx_message);	//已将原LF,RB调换
+				 Position_Data_deal_DIV8(&lift_Data.lf_lift_fdbP,&lift_position_encoder[LF],rx_message);	//已将原LF,RB调换
 				 LostCountFeed(&Error_Check.count[LOST_LIFT4]);
 				 break;
 			 }
@@ -129,11 +129,18 @@ void Speed_Data_deal(s32 * fdbV,CanRxMsg * msg)
 
 
 
-void Position_Data_deal(s32 * value,LIFT_POSITION_ENCODER *Receive,CanRxMsg * msg)
+void Position_Data_deal_DIV8(s32 * value,LIFT_POSITION_ENCODER *Receive,CanRxMsg * msg)	//分辨率转子1/8圈
 {
 	Receive->calc=(msg->Data[0]<<8)|msg->Data[1];//接收到的真实数据值  处理频率1KHz
 	Position_To_Turns(Receive);
-	*value=Receive->turns*8+(s32)(0.19f*Receive->turns+Receive->calc/1000.0);	//0.19为了消除累积误差
+	*value=Receive->turns*8+(s32)(0.192f*Receive->turns+Receive->calc/1000.0);	//0.192为了消除累积误差
+}
+
+void Position_Data_deal_DIV81(s32 * value,LIFT_POSITION_ENCODER *Receive,CanRxMsg * msg)	//分辨率转子1/81圈
+{
+	Receive->calc=(msg->Data[0]<<8)|msg->Data[1];//接收到的真实数据值  处理频率1KHz
+	Position_To_Turns(Receive);
+	*value=Receive->turns*81+(s32)(0.92f*Receive->turns+Receive->calc/100.0);	//0.192为了消除累积误差
 }
 
 
@@ -142,11 +149,11 @@ void Position_Data_deal(s32 * value,LIFT_POSITION_ENCODER *Receive,CanRxMsg * ms
 void Position_To_Turns(LIFT_POSITION_ENCODER *Receive)	//按照6倍采样来计算，机械角度共8192个挡位，则过界表现差值为6826
 {																								//注：此函数未对第一次运行时的可能的圈数直接为1的偏差做处理（处理方法在初始化中标定初始角度值）
 	Receive->calc_diff=Receive->calc_last-Receive->calc;
-	if(Receive->calc_diff>5460)
+	if(Receive->calc_diff>4096)
 	{
 		Receive->turns=Receive->turns+1;
 	}
-	else if(Receive->calc_diff<-5460)
+	else if(Receive->calc_diff<-4096)
 	{
 		Receive->turns=Receive->turns-1;
 	}

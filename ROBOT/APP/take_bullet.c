@@ -31,7 +31,7 @@ const u32 servo_POORdelay[2]={1000,1000};	//延时参数
 extern RC_Ctl_t RC_Ctl;
 extern ViceControlDataTypeDef ViceControlData;
 extern u32 time_1ms_count;
-extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];
+//extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];	//分区赛后弃用
 
 u8 auto_takebullet_statu=0;
 void TakeBullet_Control_Center(void)
@@ -88,60 +88,24 @@ void TakeBullet_Control_Center(void)
 			{
 				case BULLET_ACQUIRE:	//前伸、夹紧、抬起动作	称之为获得过程
 				{
-					if(valve_fdbstate[VALVE_BULLET_PROTRACT]==0)	//如果未伸出，就检查升降高度到抓取位置，然后伸出
-					{
-						SetCheck_GripBulletLift(1);	//0表示不抓住，即需要丢弹药箱或拔起弹药箱高度，1表示抓住，即需要夹紧弹药箱时的高度
-						SetCheck_LiftAll_To_bullet(1);	//取弹时底盘升至固定高度，1为升，0为降
-						if(SetCheck_GripBulletLift(1)==1&&SetCheck_LiftAll_To_bullet(1)==1)
-						{
-							ViceControlData.valve[VALVE_BULLET_PROTRACT]=1;	//前伸函数
-						}
-					}
-					
-					if(valve_fdbstate[VALVE_BULLET_CLAMP]==0)	//若未夹紧则执行，已夹紧则不执行，达到阶段性运作效果
-					{
-						if(valve_fdbstate[VALVE_BULLET_PROTRACT]==1&&SetCheck_GripBulletLift(1)==1)	//如果已经前伸，就向下落到抓取高度
-						{
-							ViceControlData.valve[VALVE_BULLET_CLAMP]=1;
-						}
-					}
-					
-					if(valve_fdbstate[VALVE_BULLET_CLAMP]==1)//如果前伸到位腿升起函数
-					{
-						if(SetCheck_GripBulletLift(0)==1)	//上升至可旋转高度
-						TakeBulletState=BULLET_POUROUT;//直接切换到下一状态
-					}
+
 					break;
 				}
 				case BULLET_POUROUT:	//车身倾斜、舵机旋转	称之为倒弹过程
 				{
-					ViceControlData.servo[0]=1;
-					//略作延时，切换到下一状态	//此处比英雄少一倾斜过程
-						if(servo_fdbstate[0]==1)
-						TakeBulletState=BULLET_THROWOUT;
+
 					break;
 				}
 				case BULLET_THROWOUT:	//舵机旋回、车身抬起、夹紧松开	称之为抛落过程
 				{
-					ViceControlData.servo[0]=0;
-					if(servo_fdbstate[0]==0)	//先让舵机归位的原因是以便让弹药箱能够顺利回位
-					{
-						if(SetCheck_GripBulletLift(0)==1)//车身回复到抬起（扔）弹药箱高度，扔掉弹药箱并准备下一次平移，工程实际无需此函数		//这里实际需要加一个当取弹松开后退出，不然在夹紧延时没有计算完，程序再次执行会直接跳到最后一步
-						{
-							ViceControlData.valve[VALVE_BULLET_CLAMP]=0;
-						//	ViceControlData.valve[VALVE_BULLET_PROTRACT]=0;	//注释以便平移取下一颗弹
-							auto_takebullet_statu=0;		//重置
-						}//如果车身抬起且舵机到位，则松开夹紧，至此一个完整取弹结束
-					}
+
 					break;
 				}
 			}
 		}
 		else	//如果取弹状态等于0，就回到待命状态
 		{
-			ViceControlData.valve[VALVE_BULLET_CLAMP]=0;
-			ViceControlData.servo[0]=0;
-			SetCheck_LiftAll_To_bullet(1);	//取弹时底盘升至固定高度，1为升，0为降
+
 		}
 	}
 	else	//GetWorkState()==TAKEBULLET_STATE&&RC_Ctl.rc.switch_left==RC_SWITCH_DOWN的else
@@ -279,6 +243,10 @@ void TakeBullet_Control_Center(void)
 	PWM3_4=Steer_Send[DOWN_R];
 }
 
+
+
+
+/**********************分区赛版本********************
 u8 SetCheck_TakeBullet_TakeBack_statu=0;	//切出取弹保护执行标志位
 void SetCheck_TakeBullet_TakeBack(void)	//切出取弹机构回位保护
 {
@@ -297,7 +265,6 @@ void SetCheck_TakeBullet_TakeBack(void)	//切出取弹机构回位保护
 	}
 //	return 0;
 }
-
 
 
 s16 error_bullet_lift_fdb=0;
@@ -327,3 +294,4 @@ u8	SetCheck_LiftAll_To_bullet(u8 bullet_state)	//底盘升降函数	//取弹时底盘升至固
 	
 	return (abs(lift_Data.lf_lift_fdbP+lift_Data.rf_lift_fdbP-2*(LIFT_DISTANCE_FALL-(bullet_state!=0)*(LIFT_DISTANCE_FALL-LIFT_DISTANCE_GRIPBULLET)))<30);	//这里是仅以前两腿为反馈传回的
 }
+*****************************************************/

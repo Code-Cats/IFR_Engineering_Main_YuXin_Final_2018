@@ -2,8 +2,11 @@
 
 LIFT_POSITION_ENCODER chassis_position_encoder[4]={0};
 
+LIFT_POSITION_ENCODER bulletrotate_position_encoder={0};	//取弹旋转电机
+
 extern CHASSIS_DATA chassis_Data;
-extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];
+//extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];
+extern BULLETROTATE_DATA BulletRotate_Data;
 
 /******************************************
 函数名：CAN2_Feedback_Analysis
@@ -22,7 +25,7 @@ void CAN2_Feedback_Analysis(CanRxMsg *rx_message)
 			 case 0x201:
 			{
 				Speed_Data_deal(&chassis_Data.lf_wheel_fdbV,rx_message);
-				Position_Data_deal(&chassis_Data.lf_wheel_fdbP,&chassis_position_encoder[LF],rx_message);
+				Position_Data_deal_DIV8(&chassis_Data.lf_wheel_fdbP,&chassis_position_encoder[LF],rx_message);
 				LostCountFeed(&Error_Check.count[LOST_CM1]);
 				break;
 			}
@@ -30,34 +33,38 @@ void CAN2_Feedback_Analysis(CanRxMsg *rx_message)
 			{
 				t_cm_count++;
 				Speed_Data_deal(&chassis_Data.rf_wheel_fdbV,rx_message);
-				Position_Data_deal(&chassis_Data.rf_wheel_fdbP,&chassis_position_encoder[RF],rx_message);
+				Position_Data_deal_DIV8(&chassis_Data.rf_wheel_fdbP,&chassis_position_encoder[RF],rx_message);
 				LostCountFeed(&Error_Check.count[LOST_CM2]);
 				break;
 			}
 			case 0x203:
 			{
 				Speed_Data_deal(&chassis_Data.lb_wheel_fdbV,rx_message);
-				Position_Data_deal(&chassis_Data.lb_wheel_fdbP,&chassis_position_encoder[LB],rx_message);
+				Position_Data_deal_DIV8(&chassis_Data.lb_wheel_fdbP,&chassis_position_encoder[LB],rx_message);
 				LostCountFeed(&Error_Check.count[LOST_CM3]);
 				break;
 			}
 			case 0x204:
 			{
 				Speed_Data_deal(&chassis_Data.rb_wheel_fdbV,rx_message);
-				Position_Data_deal(&chassis_Data.rb_wheel_fdbP,&chassis_position_encoder[RB],rx_message);
+				Position_Data_deal_DIV8(&chassis_Data.rb_wheel_fdbP,&chassis_position_encoder[RB],rx_message);
 				LostCountFeed(&Error_Check.count[LOST_CM4]);
 				break;
 			}
-			case 0x205:	//shoot 下
+			case 0x205:	//取弹旋转电机
 			{
-			  BulletLift_Feedback_Deal(&bulletlift_Motor_Data[BULLETLIFT_FRONTID],rx_message);
-				LostCountFeed(&Error_Check.count[LOST_BULLETLIFT1]);
+				Speed_Data_deal(&BulletRotate_Data.fdbV,rx_message);
+				Position_Data_deal_DIV81(&BulletRotate_Data.fdbP,&bulletrotate_position_encoder,rx_message);
+				LostCountFeed(&Error_Check.count[LOST_BULLETROTATE1]);
+				
+//			  BulletLift_Feedback_Deal(&bulletlift_Motor_Data[BULLETLIFT_FRONTID],rx_message);
+//				LostCountFeed(&Error_Check.count[LOST_BULLETLIFT1]);
 			  break;
 			}
-			case 0x206:	//shoot 下
+			case 0x206:	//空
 			{
-			  BulletLift_Feedback_Deal(&bulletlift_Motor_Data[BULLETLIFT_BACKID],rx_message);
-				LostCountFeed(&Error_Check.count[LOST_BULLETLIFT2]);
+//			  BulletLift_Feedback_Deal(&bulletlift_Motor_Data[BULLETLIFT_BACKID],rx_message);
+//				LostCountFeed(&Error_Check.count[LOST_BULLETLIFT2]);
 			  break;
 			}
 			 default:
@@ -98,15 +105,15 @@ void CAN2_Chassis_SendMsg(int motor_201,int motor_202,int motor_203,int motor_20
 
 
 /****************************************************
-函数名称：CAN2_Shoot_SendMsg
-函数功能：将拨弹电机数据解析后发出
-函数参数：motor_205*******前升降电机
-          motor_206*******后升降电机
+函数名称：CAN2_BulletRotate_SendMsg
+函数功能：将取弹电机数据解析后发出
+函数参数：motor_205*******第一个取弹旋转
+          motor_206*******预留第二个取弹电机
 
 函数返回值： 无
 描述：将数据存入tx_message结构体再由CAN_Transmit发送
 ****************************************************/
-void CAN2_BulletLift_SendMsg(int16_t motor_205,int16_t motor_206)
+void CAN2_BulletRotate_SendMsg(int16_t motor_205,int16_t motor_206)
 {	  
     CanTxMsg tx_message;
     tx_message.StdId = 0x1ff;

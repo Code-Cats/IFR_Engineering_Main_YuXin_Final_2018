@@ -20,13 +20,14 @@
 #include "usart6_wifi_Debug_OSC.h"
 #include "chassis.h"
 #include "protect.h"
-#include "bullet_lift.h"
+//#include "bullet_lift.h"	//改为旋转
 #include "take_bullet.h"
 #include "lift.h"
 #include "trailer.h"
 #include "image_control.h"
 #include "replenish_bullet.h"
 #include "uphill_auto_lift.h"
+#include "bullet_rotate.h"	//旋转取弹
 
 #include "mpu6050IIC.h"
 #include "mpu6050_it.h"

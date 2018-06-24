@@ -152,11 +152,11 @@ void BulletLift_Feedback_Deal(BULLETLIFT_MOTOR_DATA *bulletlift_motor_data,CanRx
 	bulletlift_motor_data->fdbV=(msg->Data[2]<<8)|msg->Data[3];
 	
 	bulletlift_motor_data->fdbP_diff=bulletlift_motor_data->fdbP_raw_last-bulletlift_motor_data->fdbP_raw;
-	if(bulletlift_motor_data->fdbP_diff>5460)	//按照6倍采样来计算，机械角度共8192个挡位，则过界表现差值为6826
+	if(bulletlift_motor_data->fdbP_diff>4096)	//按照6倍采样来计算，机械角度共8192个挡位，则过界表现差值为6826
 	{																			//注：此函数未对第一次运行时的可能的圈数直接为1的偏差做处理（处理方法在初始化中标定初始角度值）
 		bulletlift_motor_data->fdbP_raw_sum+=8192;
 	}
-	else if(bulletlift_motor_data->fdbP_diff<-5460)
+	else if(bulletlift_motor_data->fdbP_diff<-4096)
 	{
 		bulletlift_motor_data->fdbP_raw_sum-=8192;
 	}
