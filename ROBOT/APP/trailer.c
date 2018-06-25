@@ -14,7 +14,7 @@ extern u8 servo_fdbstate[2];
 
 /*
 #define VALVE_ISLAND 0		//电磁阀控制位定义
-#define VALVE_BULLET_PROTRACT 1	//前伸
+#define VALVE_BULLET_HORIZONTAL 1	//左右平移
 #define VALVE_BULLET_CLAMP 2	//夹紧
 #define VALVE_BULLET_STORAGE 3	//弹药舱
 #define VALVE_TRAILER 5	//拖车

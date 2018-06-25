@@ -12,6 +12,7 @@ extern GYRO_DATA Gyro_Data;
 
 extern CHASSIS_DATA chassis_Data;
 //extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];	分区赛后弃用
+extern BULLETROTATE_DATA BulletRotate_Data;
 extern ViceControlDataTypeDef ViceControlData;
 extern SensorDataTypeDef SensorData;
 
@@ -148,7 +149,7 @@ void Work_State_Change(void)
 		{
 			if(RC_Ctl.rc.switch_left==RC_SWITCH_MIDDLE)	//左中
 			{
-				TakeBulletState=BULLET_ACQUIRE;	//(自动)取弹标志重置
+				TakeBulletState=BULLET_OTHER;	//(自动)取弹标志重置
 				SetWorkState(STOP_STATE);
 			}
 			break;
@@ -526,6 +527,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 			
 			Remote_Task();	//执行移动
 			Lift_Task();	//开启升降
+			BulletRotate_Task();
 //			BulletLift_Task();
 			break;
 		}
@@ -807,7 +809,7 @@ void Motor_Send(void)
 //			CAN_Chassis_SendMsg(0,0,0,0);
 //    CAN_Lift_SendMsg((s16)lift_tem,(s16)lift_tem,(s16)lift_tem,(s16)lift_tem);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
-			CAN2_BulletRotate_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg((s16)BulletRotate_Data.output,0);
 			break;
 		}
 		case ERROR_STATE:	//错误模式

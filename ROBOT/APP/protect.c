@@ -53,7 +53,7 @@ void Check_Task(void)
 //	}
 	if(Error_check_workstate==1)	//工作状态
 	{
-		for(int i=4;i<LOST_TYPE_NUM;i++)	//控在一切正常后检测
+		for(int i=8;i<LOST_TYPE_NUM;i++)	//控在一切正常后检测
 		{
 			if(Error_Check.statu[i]==1)
 			{

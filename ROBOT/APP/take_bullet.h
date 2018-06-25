@@ -3,7 +3,7 @@
 #include "bsp.h"
 
 #define VALVE_ISLAND 0		//电磁阀控制位定义
-#define VALVE_BULLET_PROTRACT 1	//前伸
+#define VALVE_BULLET_HORIZONTAL 1	//左右平移
 #define VALVE_BULLET_CLAMP 2	//夹紧
 #define VALVE_BULLET_STORAGE 3	//弹药舱补弹
 #define VALVE_TRAILER 5	//拖车
@@ -19,9 +19,14 @@
 
 typedef enum
 {
-    BULLET_ACQUIRE,  		//前伸、夹紧、抬起动作	称之为获得过程
-    BULLET_POUROUT,			//车身倾斜、舵机旋转	称之为倒弹过程
-		BULLET_THROWOUT,			//舵机旋回、车身抬起、夹紧松开	称之为抛落过程
+    BULLET_ACQUIRE1,  		//前伸、夹紧、抬起动作	称之为获得过程
+    BULLET_POUROUT1,			//车身倾斜、舵机旋转	称之为倒弹过程
+		BULLET_THROWOUT1,			//舵机旋回、车身抬起、夹紧松开	称之为抛落过程
+		BULLET_ACQUIRE2,  		//2前伸、夹紧、抬起动作	称之为获得过程2
+    BULLET_POUROUT2,			//2车身倾斜、舵机旋转	称之为倒弹过程2
+		BULLET_THROWOUT2,			//2舵机旋回、车身抬起、夹紧松开	称之为抛落过程2
+		BULLET_WAITING,	//待命状态
+		BULLET_OTHER,	//非取弹状态
 }TakeBulletState_e;
 
 
