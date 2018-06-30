@@ -84,12 +84,12 @@ extern SensorDataTypeDef SensorData;
 extern u32 time_1ms_count;
 
 #define VW_REDRESS 30
-#define VX_SPEED_UP -110//加速
+#define VX_SPEED_UP -90//-110//加速
 #define VX_SPEED_NEAR -10//红外检测到后
-#define VX_PRESS_V0 -40//伸缩腿时向岛压紧力
-#define VX_SPEED_RUSH -220//200	//冲台阶
-#define VX_SPEED_WAITUP -70	//没有完全升起来时速度
-#define VX_SPEED_WAIT_FRONTFALL	-90	//后腿已经搭上后，前进撞前腿的过程
+#define VX_PRESS_V0 -30//-40//伸缩腿时向岛压紧力
+#define VX_SPEED_RUSH -140//-200//200	//冲台阶
+#define VX_SPEED_WAITUP -60//-70	//没有完全升起来时速度
+#define VX_SPEED_WAIT_FRONTFALL	-40//-80//-90	//后腿已经搭上后，前进撞前腿的过程
 
 //红外开关亮为低（即近），即0
 //限位

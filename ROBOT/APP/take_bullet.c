@@ -9,7 +9,7 @@
 TakeBulletState_e TakeBulletState=BULLET_OTHER;	//(自动)取弹标志位
 
 #define BULLETROTATE_OTHER	0	//非取弹位置
-#define BULLETROTATE_WAITING	650	//等待（对位）时位置
+#define BULLETROTATE_WAITING	750//650	//等待（对位）时位置
 #define BULLETROTATE_ACQUIRE	1100	//取弹位置
 #define BULLETROTATE_POUROUT	160	//倒弹位置
 #define BULLETROTATE_THROWOUT	280//310	//抛出位置
