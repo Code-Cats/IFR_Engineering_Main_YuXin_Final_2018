@@ -479,11 +479,6 @@
               <FilePath>..\ROBOT\APP\auto_lift.c</FilePath>
             </File>
             <File>
-              <FileName>bullet_lift.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ROBOT\APP\bullet_lift.c</FilePath>
-            </File>
-            <File>
               <FileName>chassis.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ROBOT\APP\chassis.c</FilePath>
