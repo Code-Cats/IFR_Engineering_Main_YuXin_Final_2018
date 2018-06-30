@@ -2615,9 +2615,9 @@
       </Doc>
       <Doc>
         <Name>..\ROBOT\APP\take_bullet.c</Name>
-        <ColumnNumber>10</ColumnNumber>
-        <TopLine>55</TopLine>
-        <CurrentLine>79</CurrentLine>
+        <ColumnNumber>2</ColumnNumber>
+        <TopLine>86</TopLine>
+        <CurrentLine>92</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
@@ -2705,9 +2705,9 @@
       </Doc>
       <Doc>
         <Name>..\ROBOT\APP\control.c</Name>
-        <ColumnNumber>18</ColumnNumber>
-        <TopLine>499</TopLine>
-        <CurrentLine>525</CurrentLine>
+        <ColumnNumber>46</ColumnNumber>
+        <TopLine>609</TopLine>
+        <CurrentLine>633</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

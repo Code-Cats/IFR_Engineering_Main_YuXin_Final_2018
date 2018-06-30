@@ -57,9 +57,15 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	static u32 valve_startPOOR_time[6]={0};	//记录逆向触发时间	//保持与工程车兼容性
 	static u32 servo_startPOOR_time[2]={0};	//记录逆向触发时间	//保持与工程车兼容性
 	
+	static WorkState_e State_Record=CHECK_STATE;
 	
 	if(GetWorkState()==TAKEBULLET_STATE)	//5.9更新//上一版--》//取弹升降给DOWN-MID，前伸出发-夹紧一套给DOWN-MID-->DOWN-DOWN;舵机旋转给DOWN-MID-->DOWN-UP
 	{
+		if(State_Record!=TAKEBULLET_STATE)
+		{
+			TakeBulletState=BULLET_WAITING;
+		}
+		
 		if(RC_Ctl.rc.ch3-1024>80&&TakeBulletState==BULLET_WAITING)	/////////////////////////////修改操作模式时需要修改
 		{
 			TakeBulletState=BULLET_ACQUIRE1;
@@ -71,12 +77,19 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	}	
 	else
 	{
+//		if(State_Record==TAKEBULLET_STATE)
+//		{
+//		}
+		
 		if(TakeBulletState==BULLET_WAITING)
 		{
 			TakeBulletState=BULLET_OTHER;
 		}
 	}
-					
+			
+	State_Record=GetWorkState();
+	
+	
 	switch(TakeBulletState)	//自动取弹过程
 	{
 		case BULLET_WAITING:	//等待取弹动作（对位）状态
