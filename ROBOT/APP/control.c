@@ -503,7 +503,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 		}
 		case CALI_STATE:	//标定模式
 		{
-			if(Lift_Cali()==1)	//&&BulletLift_Cali()==1	//国赛后改为旋转取弹，初始摆好位置自动记录
+			if(Lift_Cali()==1&&BulletRotate_OffSetInit()==1)	//&&BulletLift_Cali()==1	//国赛后改为旋转取弹，初始摆好位置自动记录
 			{
 				SetWorkState(NORMAL_STATE);
 			}
@@ -522,7 +522,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 			
 			if(ViceControlData.valve[VALVE_ISLAND]==0&&Replenish_Bullet_Statu==0&&Trailer_statu==0)
 			{
-				AutoChassisAttitude_Lift_V2(Chassis_GYRO[PITCH]);
+				//AutoChassisAttitude_Lift_V2(Chassis_GYRO[PITCH]);	//暂时屏蔽
 			}
 			
 			Remote_Task();	//执行移动
@@ -542,6 +542,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 			Ascend_Control_Center();
 			Remote_Task();	//执行移动
 			Lift_Task();	//开启升降
+			BulletRotate_Task();
 //			BulletLift_Task();
 			break;
 		}
@@ -557,6 +558,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 			Descend_Control_Center();
 			Remote_Task();	//执行移动
 			Lift_Task();	//开启升降
+			BulletRotate_Task();
 //			BulletLift_Task();
 			break;
 		}
@@ -566,6 +568,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 			TakeBullet_Control_Center();	//取弹控制中心
 			Remote_Task();	//执行移动
 			Lift_Task();	//开启升降
+			BulletRotate_Task();
 //			BulletLift_Task();
 			break;
 		}
@@ -577,6 +580,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 
 			Remote_Task();	//执行移动
 			Lift_Task();	//开启升降
+			BulletRotate_Task();
 //			BulletLift_Task();
 			break;
 		}
@@ -592,6 +596,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 			
 			Remote_Task();	//执行移动
 			Lift_Task();	//开启升降
+			BulletRotate_Task();
 //			BulletLift_Task();
 			break;
 		}
@@ -838,33 +843,33 @@ void Motor_Send(void)
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 //			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
-			CAN2_BulletRotate_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg((s16)BulletRotate_Data.output,0);
 			break;
 		}
 		case DESCEND_STATE:	//自动下岛模式
 		{
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
-			CAN2_BulletRotate_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg((s16)BulletRotate_Data.output,0);
 			break;
 		}
 		case TAKEBULLET_STATE:
 		{
-			CAN2_BulletRotate_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg((s16)BulletRotate_Data.output,0);
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			break;
 		}
 		case SEMI_ASCEND_STATE:
 		{
-			CAN2_BulletRotate_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg((s16)BulletRotate_Data.output,0);
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			break;
 		}
 		case SEMI_DESCEND_STATE:
 		{
-			CAN2_BulletRotate_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg((s16)BulletRotate_Data.output,0);
 			CAN2_Chassis_SendMsg(chassis_Data.lf_wheel_output,chassis_Data.rf_wheel_output,chassis_Data.lb_wheel_output,chassis_Data.rb_wheel_output);
 			CAN1_Lift_SendMsg((s16)lift_Data.lf_lift_output,(s16)lift_Data.rf_lift_output,(s16)lift_Data.lb_lift_output,(s16)lift_Data.rb_lift_output);
 			break;

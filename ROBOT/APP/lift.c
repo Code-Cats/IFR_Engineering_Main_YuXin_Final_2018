@@ -23,7 +23,7 @@ void Lift_Task(void)
 	if(GetWorkState()==NORMAL_STATE||GetWorkState()==SEMI_ASCEND_STATE||GetWorkState()==SEMI_DESCEND_STATE)	//仅在这几种模式手动可控升降
 	{
 		
-		if(RC_Ctl.rc.switch_left==RC_SWITCH_UP)	//左上，这个不删除是因为键位模式决定了无法在半自动上下岛时进行升降操作，暂定
+		if(RC_Ctl.rc.switch_left==RC_SWITCH_UP)	//左上，这个不删除是因为键位模式决定了无法在半自动上下岛时进行升降操作，暂定	
 		{
 			if(time_1ms_count%10==0)
 			{

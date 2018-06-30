@@ -55,6 +55,9 @@ void CAN2_Feedback_Analysis(CanRxMsg *rx_message)
 			{
 				Speed_Data_deal(&BulletRotate_Data.fdbV,rx_message);
 				Position_Data_deal_DIV81(&BulletRotate_Data.fdbP,&bulletrotate_position_encoder,rx_message);
+				
+				BulletRotate_Data.fdbP-=BulletRotate_Data.offsetP;
+				
 				LostCountFeed(&Error_Check.count[LOST_BULLETROTATE1]);
 				
 //			  BulletLift_Feedback_Deal(&bulletlift_Motor_Data[BULLETLIFT_FRONTID],rx_message);

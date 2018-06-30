@@ -90,5 +90,6 @@ typedef struct
 }\
 
 void BulletRotate_Task(void);
+u8 BulletRotate_OffSetInit(void);	//初始OFFSET	//在cali(output为0时)状态下进行标定
 
 #endif
