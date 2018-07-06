@@ -3,6 +3,8 @@
 extern LIFT_DATA lift_Data;	//CAN1
 
 LIFT_POSITION_ENCODER lift_position_encoder[4]={0};
+
+
 /**************** **************************
 函数名：CAN1_Feedback_Analysis
 函数功能：对底盘电机数据进行解析

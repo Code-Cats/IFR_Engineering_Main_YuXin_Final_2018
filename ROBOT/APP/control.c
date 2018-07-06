@@ -770,6 +770,7 @@ LED_Blink_Run();
 }
 
 /////////////////////////////////原来放lift task的地方
+s16 t_send_cna1_id6=0;
 
 float lift_calisend[4]={0};
 
@@ -818,10 +819,11 @@ void Motor_Send(void)
 			break;
 		}
 		case ERROR_STATE:	//错误模式
-		{
+		{	
 			CAN2_Chassis_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg(0,0,0,0);
 			CAN2_BulletRotate_SendMsg(0,0);
+//			CAN1_Yun_SendMsg(t_send_cna1_id6,t_send_cna1_id6);
 			break;
 		}
 		case STOP_STATE:	//停止状态

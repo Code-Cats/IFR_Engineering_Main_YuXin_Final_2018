@@ -59,6 +59,8 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	
 	static WorkState_e State_Record=CHECK_STATE;
 	
+	static TakeBulletState_e takebulletstate_last=BULLET_OTHER;
+	
 	if(GetWorkState()==TAKEBULLET_STATE)	//5.9更新//上一版--》//取弹升降给DOWN-MID，前伸出发-夹紧一套给DOWN-MID-->DOWN-DOWN;舵机旋转给DOWN-MID-->DOWN-UP
 	{
 		if(State_Record!=TAKEBULLET_STATE)
@@ -237,15 +239,18 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 				}
 			}
 			
-			lift_Data.lf_lift_tarP=LIFT_DISTANCE_FALL;
-			lift_Data.lb_lift_tarP=LIFT_DISTANCE_FALL;
-			lift_Data.rf_lift_tarP=LIFT_DISTANCE_FALL;
-			lift_Data.rb_lift_tarP=LIFT_DISTANCE_FALL;
+			if(takebulletstate_last!=BULLET_OTHER)
+			{
+				lift_Data.lf_lift_tarP=LIFT_DISTANCE_FALL;
+				lift_Data.lb_lift_tarP=LIFT_DISTANCE_FALL;
+				lift_Data.rf_lift_tarP=LIFT_DISTANCE_FALL;
+				lift_Data.rb_lift_tarP=LIFT_DISTANCE_FALL;
+			}
 			break;
 		}
 	}
 
-
+	takebulletstate_last=TakeBulletState;
 
 
 	
