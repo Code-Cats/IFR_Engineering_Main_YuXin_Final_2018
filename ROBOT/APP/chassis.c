@@ -16,6 +16,9 @@ extern GYRO_DATA Gyro_Data;
 extern u32 time_1ms_count;
 
 
+extern u8 Trailer_Turn180_fbdStatu;	//180旋转到位标志位，放在了上面
+extern u8 Trailer_statu;
+
 #define K_SPEED 11
 s32 t_Vw_PID=0;
 
@@ -49,14 +52,24 @@ void Remote_Task(void)
 		}
 	}
 	
-	if(Chassis_Control_RCorPC==RC_CONTROL)
+	
+	if(!(Trailer_statu==1&&Trailer_Turn180_fbdStatu==0))	//在这个模式不受控
 	{
-		RC_Control_Chassis();
+		if(Chassis_Control_RCorPC==RC_CONTROL)
+		{
+			RC_Control_Chassis();
+		}
+		else if(Chassis_Control_RCorPC==PC_CONTROL)
+		{
+			PC_Control_Chassis(&Chassis_Vx,&Chassis_Vy,&Chassis_Vw);
+		}
 	}
-	else if(Chassis_Control_RCorPC==PC_CONTROL)
+	else
 	{
-		PC_Control_Chassis(&Chassis_Vx,&Chassis_Vy,&Chassis_Vw);
+		Chassis_Vx=0;
+		Chassis_Vy=0;
 	}
+
 //	if(GetWorkState()==NORMAL_STATE||GetWorkState()==TAKEBULLET_STATE||GetWorkState()==SEMI_ASCEND_STATE||GetWorkState()==SEMI_DESCEND_STATE)
 //	{
 //		Chassis_Vx=RC_Ctl.rc.ch1-1024;
