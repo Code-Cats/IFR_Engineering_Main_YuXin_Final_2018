@@ -42,7 +42,7 @@ typedef struct
 
 typedef struct
 {
-	u8 Infrare[6];		//[4]为上下岛加速保护，[5]为拖车检测
+	u8 Infrare[8];		//[4]为上下岛加速保护，[5]为拖车检测	//7.7新增两组对位红外 [6]为左对位 [7]为右对位
 	u8 Limit[4];
 }SensorDataTypeDef;
 

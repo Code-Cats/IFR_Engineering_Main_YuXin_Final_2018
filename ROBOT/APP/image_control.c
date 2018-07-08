@@ -186,11 +186,11 @@ void Chassis_Control_Move_Reverse(u8 image_steer,u8 image_cut_state)	//»úÆ÷Ç°½ø·
 	{
 		Chassis_Control_Heading=1;	//ÕýÏò
 	}
-	else if(image_steer!=0&&image_cut_state==IMAGE_CUTLIST_TRAILER)
+	else if(image_steer!=0&&(image_cut_state==IMAGE_CUTLIST_TRAILER||image_cut_state==IMAGE_CUTLIST_REPLENISHBULLET))	//²¹µ¯¡¢ÍÏ³µ·´Ïò
 	{
 		Chassis_Control_Heading=-1;	//·´Ïò
 	}
-	else if(image_steer!=0&&(image_cut_state==IMAGE_CUTLIST_REPLENISHBULLET||image_cut_state==IMAGE_CUTLIST_TAKEBULLET||image_cut_state==IMAGE_CUTLIST_CHASSIS))
+	else if(image_steer!=0&&(image_cut_state==IMAGE_CUTLIST_TAKEBULLET||image_cut_state==IMAGE_CUTLIST_CHASSIS))
 	{
 		Chassis_Control_Heading=1;	//ÕýÏò
 	}

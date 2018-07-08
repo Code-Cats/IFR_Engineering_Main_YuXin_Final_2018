@@ -15,6 +15,7 @@ extern RC_Ctl_t RC_Ctl;
 extern GYRO_DATA Gyro_Data;
 extern u32 time_1ms_count;
 
+extern AutoAimBulletTypeDef AutoAimBulletData;
 
 extern u8 Trailer_Turn180_fbdStatu;	//180旋转到位标志位，放在了上面
 extern u8 Trailer_statu;
@@ -53,7 +54,15 @@ void Remote_Task(void)
 	}
 	
 	
-	if(!(Trailer_statu==1&&Trailer_Turn180_fbdStatu==0))	//在这个模式不受控
+	if((Trailer_statu==1&&Trailer_Turn180_fbdStatu==0)||AutoAimBulletData.control_state==1)	//在这个模式不受控
+	{
+		if(AutoAimBulletData.control_state!=1)
+		{
+			Chassis_Vx=0;
+			Chassis_Vy=0;
+		}
+	}
+	else if(1)
 	{
 		if(Chassis_Control_RCorPC==RC_CONTROL)
 		{
@@ -63,11 +72,6 @@ void Remote_Task(void)
 		{
 			PC_Control_Chassis(&Chassis_Vx,&Chassis_Vy,&Chassis_Vw);
 		}
-	}
-	else
-	{
-		Chassis_Vx=0;
-		Chassis_Vy=0;
 	}
 
 //	if(GetWorkState()==NORMAL_STATE||GetWorkState()==TAKEBULLET_STATE||GetWorkState()==SEMI_ASCEND_STATE||GetWorkState()==SEMI_DESCEND_STATE)

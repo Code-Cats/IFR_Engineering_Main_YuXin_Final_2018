@@ -83,7 +83,7 @@ void SensorData_Deal(u8 *pData)
 		SensorData.Infrare[i]=*(pData+1)>>(3-i)&0x01;
 	}
 	
-	for(int i=0;i<2;i++)
+	for(int i=0;i<4;i++)
 	{
 		SensorData.Infrare[i+4]=*(pData+2)>>(7-i)&0x01;		//[4]为上下岛加速保护，[5]为拖车检测
 	}
