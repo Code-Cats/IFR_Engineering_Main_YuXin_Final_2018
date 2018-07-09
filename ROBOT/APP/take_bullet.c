@@ -47,6 +47,7 @@ extern SensorDataTypeDef SensorData;
 //extern BULLETLIFT_MOTOR_DATA bulletlift_Motor_Data[2];	//分区赛后弃用
 extern BULLETROTATE_DATA BulletRotate_Data;	//国赛版
 extern KeyBoardTypeDef KeyBoardData[KEY_NUMS];
+extern PID_GENERAL PID_Chassis_Speed[4];
 
 extern s16 Chassis_Vx;
 extern s16 Chassis_Vy;
@@ -119,6 +120,20 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 		AutoAimBulletData.aim_state=0;	//back
 	}
 	
+	
+	if(AutoAimBulletData.control_state==1)	//自动对位开启，则底盘PID变高
+	{
+		PID_Chassis_Speed[0].k_p=CHASSIS_SPEED_PID_P*1.2f;
+		PID_Chassis_Speed[0].k_i=CHASSIS_SPEED_PID_I*1.2f;
+		PID_Chassis_Speed[0].i_sum_max=CHASSIS_SPEED_I_MAX*1.2;
+//		PID_Chassis_Speed[0].k_d=CHASSIS_SPEED_PID_P*1.2f;
+	}
+	else
+	{
+		PID_Chassis_Speed[0].k_p=CHASSIS_SPEED_PID_P;
+		PID_Chassis_Speed[0].k_i=CHASSIS_SPEED_PID_I;
+		PID_Chassis_Speed[0].i_sum_max=CHASSIS_SPEED_I_MAX;
+	}
 	
 	State_Record=GetWorkState();
 	
