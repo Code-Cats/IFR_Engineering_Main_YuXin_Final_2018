@@ -53,6 +53,7 @@ extern s16 Chassis_Vx;
 extern s16 Chassis_Vy;
 
 u8 TakeBullet_AutoAimState=1;	//默认开启自动对位，单词取弹模式可取消，对本次有效
+u8 Close_Valve_Island_Protect_State=0;	//取弹电磁阀收回保护位
 
 void TakeBullet_Control_Center(void)	//在每个状态都有运行
 {
@@ -72,10 +73,12 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	
 	if(GetWorkState()==TAKEBULLET_STATE)	//5.9更新//上一版--》//取弹升降给DOWN-MID，前伸出发-夹紧一套给DOWN-MID-->DOWN-DOWN;舵机旋转给DOWN-MID-->DOWN-UP
 	{
-		if(KeyBoardData[KEY_CTRL].value==1)	//取弹模式按了CTRL就取消自动取块
+		static u8 key_ctrl_last=0;
+		if(key_ctrl_last==0&&KeyBoardData[KEY_CTRL].value==1)	//取弹模式按了CTRL就取消自动取块
 		{
-			TakeBullet_AutoAimState=0;	//屏蔽自动对位模块
+			TakeBullet_AutoAimState=!TakeBullet_AutoAimState;	//屏蔽自动对位模块
 		}
+		key_ctrl_last=KeyBoardData[KEY_CTRL].value;
 		
 		if(State_Record!=TAKEBULLET_STATE)
 		{
@@ -105,10 +108,11 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 			
 	if(State_Record!=TAKEBULLET_STATE&&GetWorkState()==TAKEBULLET_STATE)
 	{
+		Close_Valve_Island_Protect_State=1;	//启动电磁阀收回保护
 		AutoAimBulletData.take_count=0;	//清零取块数量记录
 		AutoAimBulletData.aim_state=0;	//back
 		AutoAimBulletData.control_state=0;	//关闭对位
-		TakeBullet_AutoAimState=1;	//默认开启自动模式
+		TakeBullet_AutoAimState=0;	//默认关闭自动模式
 	}
 	
 	if(State_Record==TAKEBULLET_STATE&&GetWorkState()!=TAKEBULLET_STATE)
@@ -118,6 +122,7 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 		AutoAimBulletData.control_state=0;	//关闭对位
 		AutoAimBulletData.take_count=0;	//清零取块数量记录
 		AutoAimBulletData.aim_state=0;	//back
+		TakeBullet_AutoAimState=0;	//默认关闭自动模式
 	}
 	
 	
@@ -125,7 +130,7 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	{
 		PID_Chassis_Speed[0].k_p=CHASSIS_SPEED_PID_P*1.2f;
 		PID_Chassis_Speed[0].k_i=CHASSIS_SPEED_PID_I*1.2f;
-		PID_Chassis_Speed[0].i_sum_max=CHASSIS_SPEED_I_MAX*1.2;
+		PID_Chassis_Speed[0].i_sum_max=CHASSIS_SPEED_I_MAX*1.2f;
 //		PID_Chassis_Speed[0].k_d=CHASSIS_SPEED_PID_P*1.2f;
 	}
 	else
@@ -136,6 +141,13 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	}
 	
 	State_Record=GetWorkState();
+	
+	
+	if(TakeBullet_AutoAimState==0)	//一个保护
+	{
+		AutoAimBulletData.control_state=0;	//关闭对位
+		AutoAimBulletData.aim_state=0;
+	}
 	
 	
 	switch(TakeBulletState)	//自动取弹过程
@@ -344,6 +356,7 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	takebulletstate_last=TakeBulletState;
 
 
+	Close_Valve_Island_Protect();	//登岛取弹电磁阀返回保护
 	
 //	if(RC_Ctl.rc.switch_left==RC_SWITCH_DOWN&&RC_Ctl.rc.switch_right==RC_SWITCH_DOWN)	//给登岛腾位置
 //	{
@@ -560,6 +573,57 @@ u8 AutoAimBullet_Task(s16* chassis_vx,s16* chassis_vy)	//自动对位任务
 	aim_control_state_last=AutoAimBulletData.control_state;
 	
 	return aim_OK_statu;
+}
+
+
+#define LIFT_DISTANCE_BACKVALVE	260
+//u8 Close_Valve_Island_Protect_State=0;	//放在了上面
+void Close_Valve_Island_Protect(void)	//使电磁阀归位的保护
+{
+	static u8 close_state_last=0;
+	static u8 execute_statu=0;
+	
+	if(close_state_last==0&&Close_Valve_Island_Protect_State==1)
+	{
+		execute_statu=1;
+	}
+	
+	if(Close_Valve_Island_Protect_State==1)
+	{
+		switch(execute_statu)
+		{
+			case 0:
+			{
+				
+				break;
+			}
+			case 1:
+			{
+				lift_Data.lf_lift_tarP=LIFT_DISTANCE_BACKVALVE;
+				lift_Data.lb_lift_tarP=LIFT_DISTANCE_BACKVALVE;
+				lift_Data.rf_lift_tarP=LIFT_DISTANCE_BACKVALVE;
+				lift_Data.rb_lift_tarP=LIFT_DISTANCE_BACKVALVE;
+				
+				if(lift_Data.lf_lift_fdbP+lift_Data.lb_lift_fdbP+lift_Data.rf_lift_fdbP+lift_Data.rb_lift_fdbP-4*LIFT_DISTANCE_BACKVALVE>-150)
+				{
+					execute_statu=2;
+				}
+				break;
+			}
+			case 2:
+			{
+				lift_Data.lf_lift_tarP=LIFT_DISTANCE_FALL;
+				lift_Data.lb_lift_tarP=LIFT_DISTANCE_FALL;
+				lift_Data.rf_lift_tarP=LIFT_DISTANCE_FALL;
+				lift_Data.rb_lift_tarP=LIFT_DISTANCE_FALL;
+				execute_statu=0;
+				Close_Valve_Island_Protect_State=0;
+				break;
+			}
+		}
+	}
+	
+	close_state_last=Close_Valve_Island_Protect_State;
 }
 
 
