@@ -150,10 +150,16 @@ void RC_Control_Chassis(void)
 				Chassis_Vx=RC_Ctl.rc.ch1-1024;
 			}
 		}
-		Chassis_Vw=RC_Ctl.rc.ch2-1024;
+		Chassis_Vw=RC_Ctl.rc.ch2-1024;	//挪到取弹限制外面
 //		Chassis_Vx=RC_Ctl.rc.ch1-1024;	//代替为斜坡函数
 		Chassis_Vx_last=Chassis_Vx;
 	}
+	
+	if(GetWorkState()==ASCEND_STATE)
+	{
+		Chassis_Vw=RC_Ctl.rc.ch2-1024;	//上岛时也可以操作
+	}
+	
 	
 	if(time_1ms_count%1==0)
 	{
