@@ -350,8 +350,9 @@ void Work_State_Change_Gaming(void)	//战场版控制状态切换
 				time_count=0;
 			}
 			
-			if(Error_Check.statu[LOST_DBUS]==0&&time_count>8000)	//有反馈认为无法恢复
+			if(Error_Check.statu[LOST_DBUS]==0&&time_count>6000)	//有反馈却不退出认为无法恢复	（数据错乱）
 			{
+				time_count=0;
 				NVIC_SystemReset();
 			}
 			break;
@@ -508,11 +509,13 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 				SetWorkState(NORMAL_STATE);
 			}
 			Lift_Task();	//开启升降
+			BulletRotate_Task();	//标定
 //			BulletLift_Task();
 			break;
 		}
 		case NORMAL_STATE:	//正常操作模式
 		{
+			BulletRotate_Cali();	//异常标定
 //			ViceControlData.valve[VALVE_ISLAND]=0;//放在跳变
 			Teleconltroller_Data_protect();	//遥控器数据保护
 			TakeBullet_Control_Center();	//加上这个是因为关于舵机、气缸的假想反馈计算在这里面，切出取弹归位保护需要它，其内部已经做了仅在TAKEBULLET下做逻辑处理
@@ -564,6 +567,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 		}
 		case TAKEBULLET_STATE:
 		{
+			BulletRotate_Cali();	//异常标定
 			Teleconltroller_Data_protect();	//遥控器数据保护
 			TakeBullet_Control_Center();	//取弹控制中心
 			Remote_Task();	//执行移动
@@ -805,7 +809,7 @@ void Motor_Send(void)
 //		CAN1_Lift_SendMsg(0,0,0,0);
 			CAN1_Lift_SendMsg((s16)lift_calisend[LF],(s16)lift_calisend[RF],(s16)lift_calisend[LB],(s16)lift_calisend[RB]);
 
-			CAN2_BulletRotate_SendMsg(0,0);
+			CAN2_BulletRotate_SendMsg((s16)BulletRotate_Data.output,0);
 			break;
 		}
 		case NORMAL_STATE:	//正常操作模式

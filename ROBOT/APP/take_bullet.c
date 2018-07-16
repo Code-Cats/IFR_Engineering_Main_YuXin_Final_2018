@@ -9,12 +9,12 @@
 TakeBulletState_e TakeBulletState=BULLET_OTHER;	//(自动)取弹标志位
 AutoAimBulletTypeDef AutoAimBulletData={0};
 
-#define BULLETROTATE_OTHER	10	//非取弹位置
-#define BULLETROTATE_WAITING	540//750//650	//等待（对位）时位置
-#define BULLETROTATE_ACQUIRE	1090	//取弹位置
-#define BULLETROTATE_POUROUT	160	//倒弹位置
+#define BULLETROTATE_OTHER	15	//非取弹位置
+#define BULLETROTATE_WAITING	556//750//650	//等待（对位）时位置
+#define BULLETROTATE_ACQUIRE	1110	//取弹位置
+#define BULLETROTATE_POUROUT	170	//倒弹位置
 #define BULLETROTATE_THROWOUTEND 760	//抛出时的设定的终点
-#define BULLETROTATE_THROWOUT	280//310	//抛出位置
+#define BULLETROTATE_THROWOUT	290//280//310	//抛出位置
 
 //#define LIFT_DISTANCE_FALL 30
 #define LIFT_BULLET_POUROUT	540	//倒弹时升起
@@ -51,6 +51,7 @@ extern PID_GENERAL PID_Chassis_Speed[4];
 
 extern s16 Chassis_Vx;
 extern s16 Chassis_Vy;
+extern u8 BulletRotate_Cali_Statu;	//标定状态
 
 u8 TakeBullet_AutoAimState=1;	//默认开启自动对位，单词取弹模式可取消，对本次有效
 u8 Close_Valve_Island_Protect_State=0;	//取弹电磁阀收回保护位
@@ -74,6 +75,7 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 	if(GetWorkState()==TAKEBULLET_STATE)	//5.9更新//上一版--》//取弹升降给DOWN-MID，前伸出发-夹紧一套给DOWN-MID-->DOWN-DOWN;舵机旋转给DOWN-MID-->DOWN-UP
 	{
 		static u8 key_ctrl_last=0;
+		static u8 key_shift_last=0;
 		if(key_ctrl_last==0&&KeyBoardData[KEY_CTRL].value==1)	//取弹模式按了CTRL就取消自动取块
 		{
 			TakeBullet_AutoAimState=!TakeBullet_AutoAimState;	//屏蔽自动对位模块
@@ -92,7 +94,13 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 		else if(RC_Ctl.rc.ch3-1024<-80)
 		{
 			TakeBulletState=BULLET_WAITING;
-		}			
+		}
+
+		if(KeyBoardData[KEY_SHIFT].value==1&&key_shift_last==0)
+		{
+			BulletRotate_Cali_Statu=0;
+		}
+		key_shift_last=KeyBoardData[KEY_SHIFT].value;
 	}	
 	else
 	{
@@ -534,6 +542,10 @@ u8 AutoAimBullet_Task(s16* chassis_vx,s16* chassis_vy)	//自动对位任务
 				{
 					AutoAimBulletData.aim_state=2;
 				}
+				else if(AutoAimBulletData.relative_location==2)	//都有，速度减慢，方向不变
+				{
+					AutoAimBulletData.aim_state=4;
+				}
 				break;
 			}
 			case 1:	//向左移动
@@ -543,6 +555,10 @@ u8 AutoAimBullet_Task(s16* chassis_vx,s16* chassis_vy)	//自动对位任务
 				if(AutoAimBulletData.relative_location==0)
 				{
 					AutoAimBulletData.aim_state=3;
+				}
+				else if(AutoAimBulletData.relative_location==1)	//向右移动
+				{
+					AutoAimBulletData.aim_state=2;
 				}
 				break;
 			}
@@ -554,6 +570,10 @@ u8 AutoAimBullet_Task(s16* chassis_vx,s16* chassis_vy)	//自动对位任务
 				{
 					AutoAimBulletData.aim_state=3;
 				}
+				else if(AutoAimBulletData.relative_location==-1)	//向左移动
+				{
+					AutoAimBulletData.aim_state=1;
+				}
 				break;
 			}
 			case 3:	//空（可以取块）
@@ -562,6 +582,25 @@ u8 AutoAimBullet_Task(s16* chassis_vx,s16* chassis_vy)	//自动对位任务
 				*chassis_vy=0;
 				aim_OK_statu=1;
 				AutoAimBulletData.aim_state=0;
+				break;
+			}
+			case 4:	//都有 和都空方向一致但速度减慢
+			{
+				*chassis_vx=AUTOAIM_SPEENX;
+				*chassis_vy=AUTOAIM_EXISTSPEEDY;
+				if(AutoAimBulletData.relative_location==-1)
+				{
+					AutoAimBulletData.aim_state=1;
+				}
+				else if(AutoAimBulletData.relative_location==1)
+				{
+					AutoAimBulletData.aim_state=2;
+				}
+				else if(AutoAimBulletData.relative_location==0)	//可以取块
+				{
+					AutoAimBulletData.aim_state=3;
+				}
+				break;
 			}
 		}
 	}
