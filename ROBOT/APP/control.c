@@ -503,7 +503,7 @@ void Work_Execute_Gaming(void)	//战场版switch工作执行
 		}
 		case CALI_STATE:	//标定模式
 		{
-			if(Lift_Cali()==1&&BulletRotate_OffSetInit()==1)	//&&BulletLift_Cali()==1	//国赛后改为旋转取弹，初始摆好位置自动记录
+			if(Lift_Cali()==1&&BulletRotate_Cali()==1)	//&&BulletLift_Cali()==1	//国赛后改为旋转取弹，初始摆好位置自动记录
 			{
 				SetWorkState(NORMAL_STATE);
 			}
