@@ -10,7 +10,7 @@ TakeBulletState_e TakeBulletState=BULLET_OTHER;	//(自动)取弹标志位
 AutoAimBulletTypeDef AutoAimBulletData={0};
 
 #define BULLETROTATE_OTHER	15	//非取弹位置
-#define BULLETROTATE_WAITING	556//750//650	//等待（对位）时位置
+#define BULLETROTATE_WAITING	542//556//750//650	//等待（对位）时位置
 #define BULLETROTATE_ACQUIRE	1110	//取弹位置
 #define BULLETROTATE_POUROUT	170	//倒弹位置
 #define BULLETROTATE_THROWOUTEND 760	//抛出时的设定的终点
@@ -33,8 +33,8 @@ u16 Steer_Send[4]={STEER_UP_L_INIT,STEER_UP_R_INIT,STEER_DOWN_L_INIT,STEER_DOWN_
 
 u8 valve_fdbstate[6]={0};	//记录是否伸出的反馈标志
 u8 servo_fdbstate[2]={0};
-const u32 valve_GOODdelay[6]={300,420,100,1000,1000,1000};	//待加入，延时参数	//500是伪延时
-const u32 valve_POORdelay[6]={300,400,100,1000,1000,1000};	//待加入，延时参数
+const u32 valve_GOODdelay[6]={300,450,100,1000,1000,1000};	//待加入，延时参数	//500是伪延时
+const u32 valve_POORdelay[6]={300,450,400,1000,1000,1000};	//待加入，延时参数	//夹紧回延时给到200是为了避免飞出去的弹药箱误检测
 const u32 servo_GOODdelay[2]={2000,1000};	//延时参数	//第一段为2000是将子弹落下的延时也加进去了，因为舵机翻转和子弹下落必须是连在一体的
 const u32 servo_POORdelay[2]={1000,1000};	//延时参数
 
@@ -78,6 +78,7 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 		static u8 key_shift_last=0;
 		if(key_ctrl_last==0&&KeyBoardData[KEY_CTRL].value==1)	//取弹模式按了CTRL就取消自动取块
 		{
+			AutoAimBulletData.take_count=0;	//清零取块数量记录	//使单次取弹模式不止能取两块
 			TakeBullet_AutoAimState=!TakeBullet_AutoAimState;	//屏蔽自动对位模块
 		}
 		key_ctrl_last=KeyBoardData[KEY_CTRL].value;
@@ -322,15 +323,21 @@ void TakeBullet_Control_Center(void)	//在每个状态都有运行
 			
 			if(valve_fdbstate[VALVE_BULLET_CLAMP]==0)	//已经松开，开始下降
 			{
+				BulletRotate_Data.tarP=BULLETROTATE_WAITING;
 				lift_Data.lf_lift_tarP=LIFT_DISTANCE_FALL;
 				lift_Data.lb_lift_tarP=LIFT_DISTANCE_FALL;
 				lift_Data.rf_lift_tarP=LIFT_DISTANCE_FALL;
 				lift_Data.rb_lift_tarP=LIFT_DISTANCE_FALL;
-				TakeBulletState=BULLET_WAITING;	//进入等待状态
-				AutoAimBulletData.take_count+=2;	//标记取弹数量加2
+				if(abs(BulletRotate_Data.fdbP-BULLETROTATE_WAITING)<25)	//到准备位置，可以开始下一次
+				{
+					TakeBulletState=BULLET_WAITING;	//进入等待状态
+					AutoAimBulletData.take_count+=2;	//标记取弹数量加2
+				}
+				
+				
 			}
 			
-			if(abs(BulletRotate_Data.fdbP-BULLETROTATE_WAITING)<40)
+			if(abs(BulletRotate_Data.fdbP-BULLETROTATE_WAITING)<20)
 			{
 //				AutoAimBulletData.take_count+=2;	//标记取弹数量加2
 //				TakeBulletState=BULLET_WAITING;	//进入等待状态
