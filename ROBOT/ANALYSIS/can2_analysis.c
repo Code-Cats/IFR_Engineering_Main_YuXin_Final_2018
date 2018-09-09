@@ -117,17 +117,17 @@ void CAN2_Chassis_SendMsg(int motor_201,int motor_202,int motor_203,int motor_20
 描述：将数据存入tx_message结构体再由CAN_Transmit发送
 ****************************************************/
 void CAN2_BulletRotate_SendMsg(int16_t motor_205,int16_t motor_206)
-{	  
+{
     CanTxMsg tx_message;
     tx_message.StdId = 0x1ff;
     tx_message.IDE = CAN_Id_Standard;//标准帧
     tx_message.RTR = CAN_RTR_Data;   //数据帧
     tx_message.DLC = 0x08;           //帧长度为8
     
-    tx_message.Data[0] = (char)(motor_205>>8);
-    tx_message.Data[1] = (char)motor_205;
-    tx_message.Data[2] = (char)(motor_206>>8);
-    tx_message.Data[3] = (char)motor_206;
+    tx_message.Data[0] = 0;//(char)(motor_205>>8);
+    tx_message.Data[1] = 0;//(char)motor_205;
+    tx_message.Data[2] = 0;//(char)(motor_206>>8);
+    tx_message.Data[3] = 0;//(char)motor_206;
     tx_message.Data[4] = 0x00;
     tx_message.Data[5] = 0x00;
     tx_message.Data[6] = 0x00;
